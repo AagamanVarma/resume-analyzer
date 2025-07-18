@@ -49,12 +49,6 @@ venv\Scripts\activate     # for Windows
 pip install -r requirements.txt
 ```
 
-If `requirements.txt` is missing, install manually:
-
-```bash
-pip install flask spacy PyMuPDF google-generativeai
-python -m spacy download en_core_web_sm
-```
 
 ### 4. Set Up the API Key
 
