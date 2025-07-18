@@ -1,0 +1,49 @@
+<!-- templates/result.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resume Analysis</title>
+</head>
+<body>
+    <h1>Resume Analysis Result</h1>
+
+    <h2>Entities (Named Entities Found):</h2>
+    {% if analysis.entities %}
+        <ul>
+        {% for text, label in analysis.entities %}
+            <li><strong>{{ label }}</strong>: {{ text }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No entities found.</p>
+    {% endif %}
+
+    <h2>Skills Found:</h2>
+    {% if analysis.skills %}
+        <ul>
+        {% for skill in analysis.skills %}
+            <li>{{ skill }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No skills detected.</p>
+    {% endif %}
+
+    <h2>Experience Summary Sentences:</h2>
+    {% if analysis.experience_summary %}
+        <ul>
+        {% for sentence in analysis.experience_summary %}
+            <li>{{ sentence }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No experience-related sentences found.</p>
+    {% endif %}
+
+    <br>
+    <a href="/">Upload Another Resume</a>
+
+    <h2>AI Suggestions:</h2>
+    <pre>{{ suggestions }}</pre>
+</body>
+</html>
