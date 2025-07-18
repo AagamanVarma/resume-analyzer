@@ -2,12 +2,63 @@
 <html>
 <head>
     <title>Resume Analyzer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 80px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            margin-top: 30px;
+            text-align: center;
+        }
+        input[type="file"] {
+            padding: 10px;
+            border: 2px dashed #888;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 400px;
+            transition: border-color 0.3s;
+        }
+        input[type="file"]:hover {
+            border-color: #0066cc;
+        }
+        input[type="submit"] {
+            margin-top: 20px;
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            font-size: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        input[type="submit"]:hover {
+            background-color: #004999;
+        }
+        p.instructions {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Upload Your Resume</h1>
+    <h1>Analyze Your Resume</h1>
     <form action="/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="resume">
-        <input type="submit" value="Upload">
+        <input type="file" name="resume" accept=".pdf" required>
+        <p class="instructions">Please upload your resume in PDF format.</p>
+        <input type="submit" value="Analyze Resume">
     </form>
 </body>
 </html>
