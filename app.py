@@ -37,11 +37,22 @@ def analyze_resume(text):
 
     experience_sentences = [sent.text for sent in doc.sents if "experience" in sent.text.lower()]
 
+    # Calculate Score
+    total_skills = len(skills_list)
+    matched_skills = len(skills)
+    skill_match_percentage = (matched_skills / total_skills) * 100
+
+    # Simple Scoring
+    score = int(skill_match_percentage * 0.6 + len(experience_sentences) * 10)
+
     return {
         "entities": entities,
         "skills": sorted(skills),
-        "experience_summary": experience_sentences
+        "experience_summary": experience_sentences,
+        "skill_match_percentage": round(skill_match_percentage, 2),
+        "score": min(score, 100)  # Max 100
     }
+
 
 def extract_text_from_pdf(pdf_path):
     text = ""
@@ -51,9 +62,8 @@ def extract_text_from_pdf(pdf_path):
     return text
 
 def clean_markdown(text):
-    # Remove Markdown headers (#, ##, ###)
+
     text = re.sub(r'#+\s*', '', text)
-    # Remove bold and italics marks
     text = re.sub(r'\*\*|__|\*|_', '', text)
     return text
 
@@ -83,7 +93,20 @@ def upload():
     raw_suggestions = get_resume_feedback(text)
     cleaned_suggestions = clean_markdown(raw_suggestions)
 
-    return render_template("result.html", analysis=analysis, suggestions=cleaned_suggestions)
+    # Chart Data
+    chart_data = {
+        "skill_match_percentage": analysis["skill_match_percentage"],
+        "score": analysis["score"],
+        "matched_skills": len(analysis["skills"]),
+        "total_skills": len(skills_list)
+    }
+
+    return render_template(
+        "result.html",
+        analysis=analysis,
+        suggestions=cleaned_suggestions,
+        chart_data=chart_data
+    )
 
 if __name__ == '__main__':
     app.run(debug=True)
