@@ -55,9 +55,19 @@
 </head>
 <body>
     <h1>Analyze Your Resume</h1>
-    <form action="/upload" method="post" enctype="multipart/form-data">
+    <!-- <form action="/upload" method="post" enctype="multipart/form-data">
         <input type="file" name="resume" accept=".pdf" required>
         <p class="instructions">Please upload your resume in PDF format.</p>
+        <input type="submit" value="Analyze Resume">
+    </form> -->
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <label for="resume-upload" class="form-label"><b>1. Upload Your Resume (PDF)</b></label>
+        <input type="file" name="resume" id="resume-upload" accept=".pdf" required>
+        <p class="instructions">Please upload your resume in PDF format.</p>
+
+        <label for="jd-paste" class="form-label" style="margin-top: 20px;"><b>2. Paste the Job Description</b></label>
+        <textarea name="job_description" id="jd-paste" rows="10" placeholder="Paste the full job description here..." required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;"></textarea>
+
         <input type="submit" value="Analyze Resume">
     </form>
 </body>
