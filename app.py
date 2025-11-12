@@ -102,43 +102,6 @@ def clean_markdown(text):
 def index():
     return render_template('index.html')
 
-# @app.route('/upload', methods=['POST'])
-# def upload():
-#     if 'resume' not in request.files:
-#         return "No file part", 400
-
-#     file = request.files['resume']
-#     if file.filename == '':
-#         return "No selected file", 400
-
-#     filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-#     file.save(filepath)
-
-#     try:
-#         text = extract_text_from_pdf(filepath)
-#     except Exception as e:
-#         return f"Failed to extract PDF text: {e}", 500
-
-#     analysis = analyze_resume(text)
-
-#     raw_suggestions = get_resume_feedback(text)
-#     cleaned_suggestions = clean_markdown(raw_suggestions)
-
-#     # Chart Data
-#     chart_data = {
-#         "skill_match_percentage": analysis["skill_match_percentage"],
-#         "score": analysis["score"],
-#         "matched_skills": len(analysis["skills"]),
-#         "total_skills": len(skills_list)
-#     }
-
-#     return render_template(
-#         "result.html",
-#         analysis=analysis,
-#         suggestions=cleaned_suggestions,
-#         chart_data=chart_data
-#     )
-# Replace your old upload function with this new version
 @app.route('/upload', methods=['POST'])
 def upload():
     if 'resume' not in request.files or 'job_description' not in request.form:
@@ -181,7 +144,7 @@ def upload():
         "skill_match_percentage": analysis["skill_match_percentage"],
         "score": analysis["score"],
         "matched_skills": len(analysis["skills"]),
-        "total_skills": len(dynamic_skills_list) # Use the dynamic list count
+        "total_skills": len(dynamic_skills_list)   
     }
 
     return render_template(

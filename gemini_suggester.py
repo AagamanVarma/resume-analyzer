@@ -107,7 +107,7 @@ def get_resume_feedback(text):
     except Exception as e:
         return f"⚠️ Gemini API error: {str(e)}"
 
-# Add this new function to the end of gemini_suggester.py
+
 
 def extract_skills_from_jd(job_description_text):
     """Extracts key skills from a job description using the Gemini API."""
