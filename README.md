@@ -1,6 +1,6 @@
- # Resume Analyzer (Flask + Gemini AI)
+# Resume Analyzer (FastAPI + Gemini AI)
 
-**Resume Analyzer** is a web-based application that analyzes resumes uploaded in PDF format and provides detailed, AI-powered feedback. The system leverages natural language processing (NLP) and Google Gemini AI to extract relevant information, identify technical skills, summarize experience, and generate personalized suggestions to improve the quality and effectiveness of the resume.
+**Resume Analyzer** is a web-based application that analyzes resumes uploaded in PDF format and provides detailed, AI-powered feedback. The system leverages natural language processing (NLP), FastAPI, and Google Gemini AI to extract relevant information, identify technical skills, summarize experience, and generate personalized suggestions to improve the quality and effectiveness of the resume.
 
 ---
 
@@ -11,17 +11,18 @@
 * Identify technical and soft skills with PhraseMatcher
 * Summarize experience-related sections
 * Generate feedback and improvement suggestions using Gemini AI
-* Minimal and clean user interface using Flask and Jinja templates
+* Minimal and clean user interface using FastAPI and Jinja templates
 
 ---
 
 ## Technologies Used
 
 * Python
-* Flask
+* FastAPI
 * spaCy (`en_core_web_sm`)
 * Google Generative AI (Gemini 2.5 Pro)
 * PyMuPDF (`fitz`)
+* Uvicorn
 * HTML and Jinja for templating
 
 ---
@@ -63,7 +64,7 @@ You can obtain your API key from: [https://makersuite.google.com/app/apikey](htt
 ### 5. Run the Application
 
 ```bash
-python app.py
+uvicorn app:app --reload
 ```
 
 Access the application in your browser at: `http://127.0.0.1:5000`

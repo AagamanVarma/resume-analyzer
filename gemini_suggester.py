@@ -1,40 +1,3 @@
-# # import google.generativeai as genai
-# # import os
-
-# # # Set Gemini API key
-# # genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-
-# # def get_resume_feedback(resume_text):
-# #     model = genai.GenerativeModel("gemini-pro")
-
-# #     prompt = f"""
-# #     You are a professional resume reviewer. Based on the following resume content, provide:
-# #     1. Suggested improvements (skills, formatting, grammar, etc.)
-# #     2. Summary of strengths
-# #     3. Missing or weak sections
-
-# #     Resume Text:
-# #     \"\"\"
-# #     {resume_text}
-# #     \"\"\"
-# #     ""
-# #     response = model.generate_content(prompt)
-# #     return response.text
-# import os
-# from dotenv import load_dotenv
-# import google.generativeai as genai
-
-# load_dotenv()  # Load variables from .env
-
-# genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-
-# model = genai.GenerativeModel("gemini-1.5-pro")
-
-# def get_resume_feedback(text):
-#     prompt = f"Give feedback on this resume:\n{text}"
-#     response = model.generate_content(prompt)
-#     return response.text
-
 import os
 from dotenv import load_dotenv
 import google.generativeai as genai
@@ -42,42 +5,30 @@ import google.generativeai as genai
 load_dotenv()  # Load API key from .env file
 api_key = os.getenv("GEMINI_API_KEY")
 
-if not api_key:
-    raise ValueError("❌ GEMINI_API_KEY not found in .env file.")
 
-genai.configure(api_key=api_key)
-model = genai.GenerativeModel("gemini-2.5-pro")   
+def _get_model():
+    if not api_key:
+        return None
 
-# def get_resume_feedback(text):
-#     prompt = f"""
-#     You are a professional resume reviewer.
-#     Please provide feedback in some bullet points about:
-#     - Strengths
-#     - Weaknesses
-#     - Suggestions for improvement
+    genai.configure(api_key=api_key)
+    return genai.GenerativeModel("gemini-2.5-flash")
 
-#     Resume:
-#     \"\"\"
-#     {text}
-#     \"\"\"
-#     """
 
-#     try:
-#         response = model.generate_content(prompt)
+model = _get_model()
 
-#         #  Safe access — check if parts exist
-#         if response.parts and len(response.parts) > 0:
-#             return response.text.strip()
-#         else:
-#             return "⚠️ Gemini returned no response. Try reducing resume length or improving formatting."
-    
-#     except Exception as e:
-#         #  Handle API errors gracefully
-#         return f"⚠️ Gemini API error: {str(e)}"
-# In gemini_suggester.py
+
+def _require_model():
+    if model is None:
+        raise RuntimeError(
+            "GEMINI_API_KEY is missing or Gemini could not be initialized. "
+            "Add a valid key to your .env file."
+        )
+    return model
+
 
 def get_resume_feedback(text):
-    # This new prompt is much more specific about formatting.
+    gemini_model = _require_model()
+
     prompt = f"""
     You are an expert professional resume reviewer.
     Analyze the following resume and provide your feedback using Markdown formatting.
@@ -97,20 +48,22 @@ def get_resume_feedback(text):
     """
 
     try:
-        response = model.generate_content(prompt)
+        response = gemini_model.generate_content(prompt)
 
         if response.parts and len(response.parts) > 0:
             return response.text.strip()
         else:
-            return "⚠️ Gemini returned no response. Try reducing resume length or improving formatting."
+            raise RuntimeError("Gemini returned no response for resume feedback.")
 
     except Exception as e:
-        return f"⚠️ Gemini API error: {str(e)}"
+        raise RuntimeError(f"Gemini API error while generating resume feedback: {str(e)}") from e
 
 
 
 def extract_skills_from_jd(job_description_text):
     """Extracts key skills from a job description using the Gemini API."""
+    gemini_model = _require_model()
+
     prompt = f"""
     Based on the following job description, please extract all the important technical skills, soft skills, and tools.
     Return them as a single comma-separated list. For example: Python,Java,SQL,Teamwork,Project Management,AWS,Docker
@@ -122,16 +75,13 @@ def extract_skills_from_jd(job_description_text):
     """
 
     try:
-        response = model.generate_content(prompt)
+        response = gemini_model.generate_content(prompt)
 
         if response.parts and len(response.parts) > 0:
-            # Simple parsing: split by comma and strip whitespace from each skill
             skills = [skill.strip() for skill in response.text.split(',')]
-            # Filter out any empty strings that might result from the split
             return [skill for skill in skills if skill]
         else:
-            return [] # Return empty list if Gemini gives no response
+            raise RuntimeError("Gemini returned no response while extracting skills from the job description.")
 
     except Exception as e:
-        print(f"⚠️ Gemini API error while extracting skills: {str(e)}")
-        return [] # Return empty list on error
+        raise RuntimeError(f"Gemini API error while extracting skills: {str(e)}") from e
