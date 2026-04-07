@@ -71,19 +71,5 @@ Access the application in your browser at: `http://127.0.0.1:8000`
 
 ---
 
- 
-## Future Enhancements
 
-* Deploy to a public hosting platform (e.g., Render, Railway, or Vercel)
-* Implement user authentication and resume history
-* Add resume scoring and benchmarking features
-* Provide job recommendations based on skillset analysis
-
----
-
-## Contact
-
-For any suggestions, improvements, or collaboration inquiries, feel free to open an issue or connect via LinkedIn.
-
----
 
