@@ -20,7 +20,7 @@
 * Python
 * FastAPI
 * spaCy (`en_core_web_sm`)
-* Google Generative AI (Gemini 2.5 Pro)
+* Google Generative AI (Gemini 2.5 Flash)
 * PyMuPDF (`fitz`)
 * Uvicorn
 * HTML and Jinja for templating
@@ -56,7 +56,7 @@ pip install -r requirements.txt
 Create a `.env` file in the project root and add your Gemini API key:
 
 ```
-GOOGLE_API_KEY=your_api_key_here
+GEMINI_API_KEY=your_api_key_here
 ```
 
 You can obtain your API key from: [https://makersuite.google.com/app/apikey](https://makersuite.google.com/app/apikey)
@@ -67,7 +67,7 @@ You can obtain your API key from: [https://makersuite.google.com/app/apikey](htt
 uvicorn app:app --reload
 ```
 
-Access the application in your browser at: `http://127.0.0.1:5000`
+Access the application in your browser at: `http://127.0.0.1:8000`
 
 ---
 

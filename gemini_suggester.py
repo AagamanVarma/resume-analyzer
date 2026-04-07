@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 import google.generativeai as genai
 
-load_dotenv()  # Load API key from .env file
+load_dotenv()  # Load the Gemini API key from .env.
 api_key = os.getenv("GEMINI_API_KEY")
 
 
@@ -26,9 +26,22 @@ def _require_model():
     return model
 
 
-def get_resume_feedback(text):
+def _generate_text(prompt: str, action: str) -> str:
+    """Send a prompt to Gemini and return cleaned text."""
     gemini_model = _require_model()
 
+    try:
+        response = gemini_model.generate_content(prompt)
+    except Exception as e:
+        raise RuntimeError(f"Gemini API error while {action}: {str(e)}") from e
+
+    if response.text and response.text.strip():
+        return response.text.strip()
+
+    raise RuntimeError(f"Gemini returned no response while {action}.")
+
+
+def get_resume_feedback(text):
     prompt = f"""
     You are an expert professional resume reviewer.
     Analyze the following resume and provide your feedback using Markdown formatting.
@@ -47,23 +60,12 @@ def get_resume_feedback(text):
     \"\"\"
     """
 
-    try:
-        response = gemini_model.generate_content(prompt)
-
-        if response.parts and len(response.parts) > 0:
-            return response.text.strip()
-        else:
-            raise RuntimeError("Gemini returned no response for resume feedback.")
-
-    except Exception as e:
-        raise RuntimeError(f"Gemini API error while generating resume feedback: {str(e)}") from e
+    return _generate_text(prompt, "generating resume feedback")
 
 
 
 def extract_skills_from_jd(job_description_text):
     """Extracts key skills from a job description using the Gemini API."""
-    gemini_model = _require_model()
-
     prompt = f"""
     Based on the following job description, please extract all the important technical skills, soft skills, and tools.
     Return them as a single comma-separated list. For example: Python,Java,SQL,Teamwork,Project Management,AWS,Docker
@@ -74,14 +76,6 @@ def extract_skills_from_jd(job_description_text):
     \"\"\"
     """
 
-    try:
-        response = gemini_model.generate_content(prompt)
-
-        if response.parts and len(response.parts) > 0:
-            skills = [skill.strip() for skill in response.text.split(',')]
-            return [skill for skill in skills if skill]
-        else:
-            raise RuntimeError("Gemini returned no response while extracting skills from the job description.")
-
-    except Exception as e:
-        raise RuntimeError(f"Gemini API error while extracting skills: {str(e)}") from e
+    response_text = _generate_text(prompt, "extracting skills from the job description")
+    skills = [skill.strip() for skill in response_text.split(",")]
+    return [skill for skill in skills if skill]

@@ -22,7 +22,7 @@ def analyze_resume(text, skills_to_find, matcher_instance):
     # Collect matched skills from the PhraseMatcher.
     matches = matcher_instance(doc)
     skills = set()
-    for match_id, start, end in matches:
+    for _, start, end in matches:
         span = doc[start:end]
         skills.add(span.text)
 
@@ -68,7 +68,7 @@ async def upload(
         raise HTTPException(status_code=400, detail="No selected file")
 
     # Basic validation keeps the endpoint predictable for users.
-    if job_description.strip() == "":
+    if not job_description.strip():
         raise HTTPException(status_code=400, detail="Empty job description")
 
     if not resume.filename.lower().endswith(".pdf"):
